@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PulseDesk Frontend
 
-## Getting Started
+## Project Overview
+PulseDesk is a prototype attendance and employee management experience built on Next.js App Router, tailored around role-aware consoles for admins and employees. This front-end simulates a full-stack workflow (auth, data, analytics, notifications) so stakeholders can explore workflows before wiring in a backend.
 
-First, run the development server:
+## Tech Stack
+- **Next.js 16** (App Router, server/client components)
+- **Tailwind CSS 4** + custom gradients
+- **NextAuth** credentials provider for role-aware sessions
+- **Framer Motion** micro-animations for cards, sidebar, and toast interactions
+- **Sonner** toast library for success/error messaging
+- **Recharts** for pie/line/bar analytics
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Architecture
+1. **Providers**: `AuthProvider` (NextAuth) and `DataProvider` wrap the layout; the latter simulates API calls via `src/services/api.ts` while emitting Sonner toasts for error/success paths.
+2. **API layer**: `src/services/api.ts` maintains in-memory stores of employees, attendance, and notifications, injecting delays and occasional failures so the UI behaves like it is calling real endpoints.
+3. **Role routing**: `/admin/*` and `/employee/*` layouts plug into the shared `AppShell`, but middleware (`middleware.ts`) restricts access based on the JWT’s `role` claim.
+4. **UI modules**: Landing page, login form, dashboards, notifications, and profile pages all live under `src/app` with client-side components leveraging the data context for fresher state.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Role-Based Routing
+| Route | Description | Accessible by |
+| ----- | ----------- | ------------- |
+| `/admin` | Admin shell (attendance, employees, reporting, notifications) | Admins only
+| `/employee` | Employee portal (check-in, history, notifications, profile) | Employees only
+| `/login` | Credentials sign-in that redirects based on role | Everyone
+| `/` | Landing brochure + quick login/demo actions | Public
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo Credentials
+| Role | Email | Password |
+| ---- | ----- | -------- |
+| Admin | `sasha@pulsedesk.com` | `admin123` |
+| Employee | `rahul@pulsedesk.com` | `employee123` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Screenshots
+*(Add your own screenshots under `public/screenshots/` and reference them below)*
+- `public/screenshots/admin-overview.png` – Analytics + activity timeline
+- `public/screenshots/employee-checkin.png` – Check-in widget with success toast
+- `public/screenshots/landing.png` – Product story landing page
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Future Improvements
+1. Swap the fake API layer for real endpoints (REST/GraphQL) so state persists between sessions and machines.
+2. Expand admin tooling (approvals, exports, role management) plus employee self-service workflows.
+3. Harden authentication (SSO, rotating secrets) and add middleware/guard coverage for every dynamic route.

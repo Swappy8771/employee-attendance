@@ -1,231 +1,251 @@
 "use client";
 
-const uspHighlights = [
-  {
-    title: "Real-time attendance",
-    description:
-      "Track check-in/out instantly so managers know exactly who is on-site without manual spreadsheets.",
-  },
-  {
-    title: "Employee-centric insights",
-    description:
-      "Provide each team member with their own dashboard showing attendance history, streaks, and milestones.",
-  },
-  {
-    title: "Secure admin controls",
-    description:
-      "Admins can create and manage employees, approve adjustments, and broadcast notifications from one console.",
-  },
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+
+const features = [
+  "Employee Attendance Tracking",
+  "Role-Based Dashboards",
+  "Real-Time Analytics",
+  "Smart Notifications",
 ];
 
-const serviceCards = [
+const dashboardPanels = [
   {
-    title: "Employee Management",
-    body: "Create, update, or deactivate staff profiles with departments, shifts, and roles plus quick search.",
+    title: "Admin console",
+    description: "Roster oversight, approvals, and activity timeline all in one card.",
   },
   {
-    title: "Attendance Hub",
-    body: "Mark or edit check-in/check-out times, review today’s attendance summaries, and flag late arrivals.",
-  },
-  {
-    title: "Reporting & Analytics",
-    body: "Export summaries, view present vs. absent trends, and monitor compliance with a glance.",
-  },
-  {
-    title: "Notifications",
-    body: "Send targeted announcements or reminders to admins, managers, or individuals via in-app alerts.",
+    title: "Employee portal",
+    description: "Check-in, history, and personalized alerts for every person on the team.",
   },
 ];
 
 const testimonials = [
   {
     quote:
-      "Switching to this front-end dashboard brought full clarity to our daily staffing and made reporting painless.",
+      "PulseDesk gave us a shared truth for attendance—admins trust the dashboards, and employees love the transparency.",
     person: "Dana Pierce, HR Director",
     role: "Healthcare",
   },
   {
     quote:
-      "Employees love having a personal view of their check-ins, and we finally trust attendance data without chasing emails.",
+      "We launched within a week because the prototype already felt complete: analytics, notifications, and invites all worked.",
     person: "Rohit Nair, Operations Lead",
     role: "Logistics",
   },
 ];
 
+const pricing = [
+  {
+    name: "Starter",
+    price: "$0",
+    description: "For small pilots and trials—includes 5 users, mock data, and the employee portal.",
+  },
+  {
+    name: "Growth",
+    price: "$49",
+    description: "Full admin + employee experience with analytics, notifications, and reporting exports.",
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    description: "Add real backends, SSO, and tailored onboarding once you lift off from the prototype.",
+  },
+];
+
 export default function Home() {
+  const handleDemoSignIn = (role: "admin" | "employee") => {
+    const payload =
+      role === "admin"
+        ? { email: "sasha@pulsedesk.com", password: "admin123" }
+        : { email: "rahul@pulsedesk.com", password: "employee123" };
+
+    void signIn("credentials", {
+      ...payload,
+      callbackUrl: role === "admin" ? "/admin" : "/employee",
+    });
+  };
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
+    <div className="bg-zinc-950 text-zinc-50">
       <header className="bg-gradient-to-b from-zinc-900 via-zinc-950 to-zinc-950">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 text-sm font-semibold">
+        <div className="bg-amber-500/20 px-6 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-amber-200">
+          ⚡ Demo Mode – Data resets periodically. Use the quick buttons below to sign in instantly.
+        </div>
+        <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 text-sm font-semibold">
           <span className="text-xl tracking-tight">PulseDesk</span>
-          <div className="hidden items-center gap-6 md:flex">
-            <a href="#usp" className="transition hover:text-white">
-              Why PulseDesk?
+          <div className="hidden items-center gap-5 md:flex">
+            <a href="#problem" className="transition hover:text-white">
+              Problem
             </a>
-            <a href="#services" className="transition hover:text-white">
-              What we provide
+            <a href="#solution" className="transition hover:text-white">
+              Solution
             </a>
-            <a href="#testimonials" className="transition hover:text-white">
-              Testimonials
+            <a href="#features" className="transition hover:text-white">
+              Features
             </a>
-            <a href="#contact" className="transition hover:text-white">
-              Contact
+            <a href="#dashboard" className="transition hover:text-white">
+              Dashboards
+            </a>
+            <a href="#pricing" className="transition hover:text-white">
+              Pricing
             </a>
           </div>
-          <button className="rounded-full bg-amber-400 px-4 py-2 text-zinc-950 transition hover:bg-amber-300">
-            Book a demo
-          </button>
+          <Link
+            href="/login"
+            className="rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.4em] text-white transition hover:border-white"
+          >
+            Login
+          </Link>
         </nav>
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-12 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-2xl space-y-6">
-            <p className="text-sm uppercase tracking-[0.3em] text-amber-300">Employee management</p>
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-16 pt-10 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-6">
+            <p className="text-sm uppercase tracking-[0.4em] text-amber-300">Employee management, reimagined</p>
             <h1 className="text-4xl font-semibold leading-tight text-white md:text-5xl">
-              Bring attendance, staff tools, and reporting together on one elegant front-end.
+              Control check-ins, profiles, and alerts without leaving one modern dashboard.
             </h1>
             <p className="text-lg text-zinc-300">
-              Built for admins and employees, PulseDesk offers check-in/check-out automation, individual
-              attendance history, and notifications so every stakeholder has context instantly.
+              PulseDesk unifies the admin console and employee portal so attendance is always accurate, insights update
+              in real-time, and notifications travel straight to the people who need them.
             </p>
             <div className="flex flex-wrap gap-3">
-              <button className="rounded-full bg-white px-6 py-3 font-semibold text-zinc-900 transition hover:bg-zinc-100">
-                Start with sample data
+              <button className="rounded-full bg-amber-400 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-zinc-900">
+                Launch demo
               </button>
-              <button className="rounded-full border border-zinc-600 px-6 py-3 font-semibold text-zinc-200 transition hover:border-white">
-                See admin console
+              <button
+                onClick={() => handleDemoSignIn("admin")}
+                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+              >
+                Login as Admin
               </button>
+              <button
+                onClick={() => handleDemoSignIn("employee")}
+                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+              >
+                Login as Employee
+              </button>
+              <Link
+                href="/employee"
+                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-white"
+              >
+                Try employee view
+              </Link>
             </div>
           </div>
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur">
-            <p className="text-sm uppercase tracking-[0.4em] text-amber-300">Live view</p>
-            <h2 className="mt-4 text-2xl font-semibold">Today’s attendance</h2>
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between rounded-2xl bg-zinc-900/50 px-4 py-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">present</p>
-                  <p className="text-2xl font-semibold text-emerald-400">28</p>
-                </div>
-                <span className="text-xs text-zinc-400">updated 5m ago</span>
-              </div>
-              <div className="flex items-center justify-between rounded-2xl bg-zinc-900/50 px-4 py-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">absent</p>
-                  <p className="text-2xl font-semibold text-rose-400">3</p>
-                </div>
-                <span className="text-xs text-zinc-400">needs review</span>
-              </div>
+            <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Live preview</p>
+            <h2 className="mt-4 text-2xl font-semibold text-white">PulseDesk HQ</h2>
+            <div className="mt-5 space-y-3 text-sm text-zinc-300">
+              <p>Admin: Attendance summary, notifications, activity logs.</p>
+              <p>Employee: Check-in button, history, personalized reminders.</p>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto flex max-w-6xl flex-col gap-16 px-6 py-16">
-        <section id="usp" className="space-y-8">
-          <p className="text-sm uppercase tracking-[0.4em] text-amber-300">Our USP</p>
-          <div className="grid gap-6 md:grid-cols-3">
-            {uspHighlights.map((item) => (
-              <article
-                key={item.title}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/20"
-              >
-                <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-300">{item.description}</p>
-              </article>
-            ))}
-          </div>
+      <main className="mx-auto flex max-w-6xl flex-col gap-20 px-6 py-16">
+        <section id="problem" className="space-y-4 rounded-3xl border border-white/10 bg-zinc-900/60 p-6">
+          <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Problem</p>
+          <h2 className="text-3xl font-semibold text-white">Attendance data is scattered and trust is low.</h2>
+          <p className="text-sm text-zinc-400">
+            Managers shuffle spreadsheets, employees chase emails, and no one has a shared source of truth for who arrived when.
+            That means missed approvals, late payroll, and frustrated teams.
+          </p>
         </section>
 
-        <section id="services" className="space-y-8">
-          <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-amber-300">What we provide</p>
-              <h2 className="text-3xl font-semibold">Everything required to run an attendance-first workplace.</h2>
-            </div>
-            <button className="rounded-full border border-zinc-600 px-4 py-2 text-sm uppercase tracking-[0.3em] text-zinc-400 transition hover:border-white">
-              View documentation
-            </button>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {serviceCards.map((card) => (
-              <div
-                key={card.title}
-                className="rounded-3xl border border-zinc-800 bg-zinc-900/70 p-6 shadow-[0_20px_45px_-15px_rgba(0,0,0,0.8)]"
-              >
-                <h3 className="text-2xl font-semibold text-white">{card.title}</h3>
-                <p className="mt-3 text-sm text-zinc-300">{card.body}</p>
-              </div>
-            ))}
-          </div>
+        <section id="solution" className="space-y-4 rounded-3xl border border-white/10 bg-zinc-900/60 p-6">
+          <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Solution</p>
+          <h2 className="text-3xl font-semibold text-white">One web app gives every role the data they need.</h2>
+          <p className="text-sm text-zinc-400">
+            PulseDesk ties together NextAuth-powered sessions, tracker-backed attendance, dashboards, and alerts so admins
+            can act, and employees can see their own history and reminders without calling support.
+          </p>
         </section>
 
-        <section id="testimonials" className="space-y-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-amber-300">Testimonials</p>
-          <div className="grid gap-6 md:grid-cols-2">
-            {testimonials.map((item) => (
-              <div
-                key={item.person}
-                className="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-zinc-200"
-              >
-                <p className="text-lg leading-relaxed text-white">“{item.quote}”</p>
-                <p className="mt-4 text-sm font-semibold text-amber-300">{item.person}</p>
-                <p className="text-xs uppercase tracking-[0.3em] text-zinc-400">{item.role}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="contact" className="space-y-6 rounded-3xl border border-zinc-800 bg-gradient-to-b from-amber-500/20 to-white/10 p-6">
+        <section id="features" className="space-y-8">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-amber-300">Contact us</p>
-            <h2 className="text-3xl font-semibold text-white">Let’s align on your attendance goals.</h2>
-            <p className="text-sm text-zinc-200">
-              Share your challenges and we’ll tailor a lightweight rollout using our dummy data foundation so you can
-              test before you automate.
-            </p>
+            <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Features</p>
+            <h2 className="text-3xl font-semibold">Everything a modern HR/Operations team needs.</h2>
           </div>
-          <form className="grid gap-4 md:grid-cols-2">
-            <input
-              type="text"
-              placeholder="Full name"
-              className="rounded-2xl border border-white/20 bg-zinc-900/60 px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-300 focus:outline-none"
-            />
-            <input
-              type="email"
-              placeholder="Work email"
-              className="rounded-2xl border border-white/20 bg-zinc-900/60 px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-300 focus:outline-none"
-            />
-            <textarea
-              placeholder="Tell us what you need"
-              rows={3}
-              className="md:col-span-2 rounded-2xl border border-white/20 bg-zinc-900/60 px-4 py-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-300 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="md:col-span-2 rounded-2xl bg-amber-400 px-6 py-3 text-sm font-semibold text-zinc-900 transition hover:bg-amber-300"
-            >
-              Send message
-            </button>
-          </form>
+          <div className="grid gap-6 md:grid-cols-2">
+            {features.map((feature) => (
+              <div
+                key={feature}
+                className="rounded-3xl border border-white/10 bg-zinc-900/60 p-5 shadow-[0_20px_45px_-15px_rgba(0,0,0,0.8)]"
+              >
+                <p className="text-sm uppercase tracking-[0.3em] text-amber-300">Feature</p>
+                <h3 className="mt-2 text-xl font-semibold text-white">{feature}</h3>
+                <p className="mt-3 text-sm text-zinc-400">
+                  PulseDesk delivers {feature.toLowerCase()} plus extra context so you can measure, notify, and
+                  follow up in one flow.
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section id="dashboard" className="space-y-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Dashboard snapshots</p>
+            <h2 className="text-3xl font-semibold">Screens that feel like a real product.</h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            {dashboardPanels.map((panel) => (
+              <div
+                key={panel.title}
+                className="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900/80 to-zinc-800/60 p-6"
+              >
+                <p className="text-sm uppercase tracking-[0.3em] text-amber-300">{panel.title}</p>
+                <p className="mt-3 text-sm text-zinc-300">{panel.description}</p>
+                <div className="mt-6 grid gap-3 rounded-2xl border border-white/5 bg-black/40 p-4 text-xs uppercase tracking-[0.4em] text-zinc-400">
+                  <span>Analytics</span>
+                  <span>Notifications</span>
+                  <span>Activity</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Testimonials</p>
+            <h2 className="text-3xl font-semibold">Teams love seeing it in one place.</h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            {testimonials.map((testimonial) => (
+              <blockquote
+                key={testimonial.person}
+                className="rounded-3xl border border-white/10 bg-zinc-900/60 p-6 shadow-[0_20px_30px_rgba(0,0,0,0.75)]"
+              >
+                <p className="text-sm text-zinc-300">“{testimonial.quote}”</p>
+                <footer className="mt-4 text-xs uppercase tracking-[0.4em] text-amber-300">
+                  {testimonial.person} • {testimonial.role}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </section>
+
+        <section id="pricing" className="space-y-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-amber-300">Pricing</p>
+            <h2 className="text-3xl font-semibold">Choose the right prototype bundle.</h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {pricing.map((plan) => (
+              <div
+                key={plan.name}
+                className="rounded-3xl border border-white/10 bg-zinc-900/60 p-6 shadow-[0_20px_35px_rgba(0,0,0,0.7)]"
+              >
+                <p className="text-xs uppercase tracking-[0.3em] text-amber-300">{plan.name}</p>
+                <p className="mt-3 text-3xl font-semibold text-white">{plan.price}</p>
+                <p className="mt-2 text-sm text-zinc-400">{plan.description}</p>
+              </div>
+            ))}
+          </div>
         </section>
       </main>
-
-      <footer className="border-t border-white/10 bg-black/40">
-        <div className="mx-auto max-w-6xl px-6 py-10 text-sm text-zinc-400">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <p>© {new Date().getFullYear()} PulseDesk. Crafted for admins, loved by employees.</p>
-            <div className="flex flex-wrap gap-4">
-              <a className="transition hover:text-white" href="#">
-                Privacy
-              </a>
-              <a className="transition hover:text-white" href="#">
-                Terms
-              </a>
-              <a className="transition hover:text-white" href="#">
-                Support
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

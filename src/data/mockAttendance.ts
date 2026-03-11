@@ -9,45 +9,67 @@ export type AttendanceEntry = {
   status: AttendanceStatus;
 };
 
-const today = new Date();
-const formattedToday = today.toISOString().split("T")[0];
+import { mockEmployees } from "./mockEmployees";
 
-export const mockAttendance: AttendanceEntry[] = [
-  {
-    id: "att-1",
-    employeeId: "emp-2",
-    date: formattedToday,
-    checkIn: "08:50",
-    checkOut: "17:05",
-    status: "present",
-  },
-  {
-    id: "att-2",
-    employeeId: "emp-3",
-    date: formattedToday,
-    checkIn: "10:05",
-    status: "late",
-  },
-  {
-    id: "att-3",
-    employeeId: "emp-4",
-    date: formattedToday,
-    checkIn: "08:28",
-    checkOut: "16:55",
-    status: "present",
-  },
-  {
-    id: "att-4",
-    employeeId: "emp-5",
-    date: formattedToday,
-    status: "absent",
-  },
-  {
-    id: "att-5",
-    employeeId: "emp-2",
-    date: new Date(today.getTime() - 86400000).toISOString().split("T")[0],
-    checkIn: "08:55",
-    checkOut: "17:00",
-    status: "present",
-  },
-];
+const formatTime = (hour: number, minute: number) =>
+  `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+
+const pseudoRandom = (seed: string) => {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) & 0xffffffff;
+  }
+  return Math.abs(hash % 100);
+};
+
+const getAttendanceStatus = (checkIn?: string): AttendanceStatus => {
+  if (!checkIn) return "absent";
+  return checkIn > "09:15" ? "late" : "present";
+};
+
+const generateAttendance = (): AttendanceEntry[] => {
+  const entries: AttendanceEntry[] = [];
+  const today = new Date();
+  const employees = mockEmployees.filter((employee) => employee.role === "employee");
+
+  for (let delta = 0; delta < 30; delta += 1) {
+    const current = new Date(today.getTime());
+    current.setDate(current.getDate() - delta);
+    const iso = current.toISOString().split("T")[0];
+
+    employees.forEach((employee) => {
+      const seed = `${employee.id}:${iso}`;
+      const rand = pseudoRandom(seed);
+      let checkIn: string | undefined;
+      let checkOut: string | undefined;
+
+      if (rand < 65) {
+        const hour = 8 + (rand % 2);
+        const minute = hour === 8 ? 10 + (rand % 50) : 5 + (rand % 10);
+        checkIn = formatTime(hour, minute);
+        const outHour = 16 + (rand % 3);
+        const outMinute = 30 + (rand % 30);
+        checkOut = formatTime(outHour, outMinute);
+      } else if (rand < 85) {
+        const minute = 15 + (rand % 40);
+        checkIn = formatTime(9, minute);
+        const outHour = 17 + (rand % 2);
+        const outMinute = 15 + (rand % 30);
+        checkOut = formatTime(outHour, outMinute);
+      }
+
+      entries.push({
+        id: `att-${employee.id}-${iso}`,
+        employeeId: employee.id,
+        date: iso,
+        status: getAttendanceStatus(checkIn),
+        checkIn,
+        checkOut,
+      });
+    });
+  }
+
+  return entries;
+};
+
+export const mockAttendance = generateAttendance();
