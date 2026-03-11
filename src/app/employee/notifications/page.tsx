@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { NotificationCategory, useData } from "@/context/data-context";
+import type { NotificationCategory } from "@/data/notifications";
+import { useData } from "@/context/data-context";
 
 const categoryAccent: Record<NotificationCategory, string> = {
   announcement: "text-sky-300",

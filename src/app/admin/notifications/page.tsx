@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
-import { NotificationCategory, useData } from "@/context/data-context";
+import type { NotificationCategory } from "@/data/notifications";
+import { useData } from "@/context/data-context";
 
 const categoryLabels: Record<NotificationCategory, { label: string; color: string }> = {
   announcement: { label: "Announcement", color: "text-sky-300" },

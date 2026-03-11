@@ -1,10 +1,12 @@
+import type { AuthOptions } from "next-auth";
 import NextAuth from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { mockEmployees, mockUserRecords } from "@/data/mockEmployees";
 
 const secret = process.env.NEXTAUTH_SECRET ?? "development-secret";
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   secret,
   providers: [
     CredentialsProvider({
@@ -41,17 +43,19 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt(params) {
+      const { token, user } = params;
       if (user) {
-        token.role = user.role;
-        token.id = user.id;
+        (token as JWT & { role?: string; id?: string }).role = user.role;
+        (token as JWT & { role?: string; id?: string }).id = user.id;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session(params) {
+      const { session, token } = params;
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        session.user.id = (token as JWT & { id?: string }).id as string;
+        session.user.role = (token as JWT & { role?: string }).role as string;
       }
       return session;
     },

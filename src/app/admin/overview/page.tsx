@@ -187,7 +187,7 @@ export default function AdminOverviewPage() {
                     <Cell key={entry.name} fill={statusColors[entry.status as keyof typeof statusColors]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => `${value} employees`} />
+                <Tooltip formatter={(value) => `${value ?? 0} employees`} />
               </PieChart>
             </ResponsiveContainer>
           </div>
